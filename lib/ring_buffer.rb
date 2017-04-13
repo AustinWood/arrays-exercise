@@ -25,7 +25,9 @@ class RingBuffer
   # O(1)
   def pop
     raise "index out of bounds" unless length > 0
+    val = self[length - 1]
     self.length -= 1
+    val
   end
 
   # O(1) ammortized
@@ -33,6 +35,7 @@ class RingBuffer
     resize! if self.length == self.capacity
     self.length += 1
     self[length - 1] = val
+    nil
   end
 
   # O(1)
@@ -57,17 +60,18 @@ class RingBuffer
   attr_writer :length
 
   def check_idx(idx)
-    unless idx >= 0 && (idx + self.start_idx) % self.capacity < self.length
+    unless idx >= 0 && idx < self.length
       raise "index out of bounds"
     end
   end
 
   def resize!
-    arr = self.store
-    self.capacity = self.capacity * 2
-    self.store = StaticArray.new(self.capacity)
-    (0...self.length).each do |i|
-      self[i] = arr[i]
-    end
+    new_capacity = self.capacity * 2
+    new_store = StaticArray.new(new_capacity)
+    length.times { |i| new_store[i] = self[i]}
+
+    self.capacity = new_capacity
+    self.store = new_store
+    self.start_idx = 0
   end
 end
