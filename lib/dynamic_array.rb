@@ -10,15 +10,15 @@ class DynamicArray
   end
 
   # O(1)
-  def [](index)
-    check_index(index)
-    store[index]
+  def [](idx)
+    check_idx(idx)
+    store[idx]
   end
 
   # O(1)
-  def []=(index, val)
-    check_index(index)
-    store[index] = val
+  def []=(idx, val)
+    check_idx(idx)
+    store[idx] = val
   end
 
   # O(1)
@@ -59,8 +59,8 @@ class DynamicArray
   attr_accessor :capacity, :store
   attr_writer :length
 
-  def check_index(index)
-    raise "index out of bounds" unless index >= 0 && index < length
+  def check_idx(idx)
+    raise "index out of bounds" unless idx >= 0 && idx < length
   end
 
   # O(n): has to copy over all the elements to the new store.

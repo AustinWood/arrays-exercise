@@ -11,15 +11,15 @@ class RingBuffer
   end
 
   # O(1)
-  def [](index)
-    check_index(index)
-    store[index]
+  def [](idx)
+    check_idx(idx)
+    store[(start_idx + idx) % capacity]
   end
 
   # O(1)
-  def []=(index, val)
-    check_index(index)
-    store[index] = val
+  def []=(idx, val)
+    check_idx(idx)
+    store[(start_idx + idx) % capacity] = val
   end
 
   # O(1)
@@ -37,18 +37,29 @@ class RingBuffer
 
   # O(1)
   def shift
+    raise "index out of bounds" if (length == 0)
+    val = self[0]
+    self.start_idx = (self.start_idx + 1) % self.capacity
+    self.length -= 1
+    val
   end
 
   # O(1) ammortized
   def unshift(val)
+    resize! if self.length == self.capacity
+    self.start_idx = (self.start_idx - 1) % self.capacity
+    self.length += 1
+    self[0] = val
   end
 
   protected
   attr_accessor :capacity, :start_idx, :store
   attr_writer :length
 
-  def check_index(index)
-    raise "index out of bounds" unless index >= 0 && index < length
+  def check_idx(idx)
+    unless idx >= 0 && (idx + self.start_idx) % self.capacity < self.length
+      raise "index out of bounds"
+    end
   end
 
   def resize!
