@@ -10,8 +10,8 @@ class StaticArray
   end
 
   # O(1)
-  def []=(index, value)
-    store[index] = value
+  def []=(index, val)
+    store[index] = val
   end
 
   protected

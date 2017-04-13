@@ -16,9 +16,9 @@ class DynamicArray
   end
 
   # O(1)
-  def []=(index, value)
+  def []=(index, val)
     check_index(index)
-    store[index] = value
+    store[index] = val
   end
 
   # O(1)
